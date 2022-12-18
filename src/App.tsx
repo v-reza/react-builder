@@ -1,25 +1,30 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import JSZip from 'jszip';
+import { saveAs } from "file-saver"
 
 function App() {
+  const zip = new JSZip()
+
+  const onDownload = () => {
+    const folderOne = zip.folder("folderOne");
+    const folderTwo = zip.folder("folderTwo");
+    folderOne?.file("fileOne.js", `function helloWorld () {
+      console.log("Hello World Folder One");
+    }`);
+    folderOne?.folder("folderOneOne")?.file("fileOneOne.txt", "Hello World Folder One One");
+    folderTwo?.file("fileTwo.txt", "Hello World Folder Two");
+    zip.generateAsync({type:"blob"})
+    .then(function(content) {
+        // see FileSaver.js
+        saveAs(content, "example.zip");
+    });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <div>
+      <button onClick={onDownload}>Download</button>
+   </div>
   );
 }
 
