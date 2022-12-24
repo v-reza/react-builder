@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import Layout from "./Layout";
-import Form from "./Form";
+import List from "./List";
+import useAuth from "../../hooks/useAuth";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
   return (
     <>
       <Layout>
-        <Form />
+        <List />
       </Layout>
     </>
   );

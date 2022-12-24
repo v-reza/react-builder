@@ -57,6 +57,7 @@ export const RenderIsAuthComponent = (
 };
 function App() {
   const { isAuthenticated } = useAuth();
+  const projectId = localStorage.getItem("projectId");
 
   // const zip = new JSZip()
 
@@ -80,13 +81,30 @@ function App() {
       <ToastContainer />
       {isAuthenticated && <Navbar />}
       <Routes>
-        <Route path="/">
-          <Route index element={RenderIsAuthComponent(Home)} />
-          <Route path="create" element={RenderIsAuthComponent(Create)} />
-        </Route>
-    
         <Route path="/dashboard/*" element={RenderIsAuthComponent(Dashboard)} />
-          
+
+        <Route path="/">
+          <Route
+            index
+            element={
+              projectId ? (
+                <Navigate to="/dashboard/home" />
+              ) : (
+                RenderIsAuthComponent(Home)
+              )
+            }
+          />
+          <Route
+            path="create"
+            element={
+              projectId ? (
+                <Navigate to="/dashboard/home" />
+              ) : (
+                RenderIsAuthComponent(Create)
+              )
+            }
+          />
+        </Route>
 
         <Route path="/auth">
           <Route

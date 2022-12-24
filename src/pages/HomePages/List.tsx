@@ -87,7 +87,7 @@ export const ListProject = (props: ListProjectProps) => {
   );
 };
 
-const Form = () => {
+const List = () => {
   const { currentUser } = useUser();
   return (
     <>
@@ -103,4 +103,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default List;
