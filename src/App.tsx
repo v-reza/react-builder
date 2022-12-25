@@ -84,26 +84,8 @@ function App() {
         <Route path="/dashboard/*" element={RenderIsAuthComponent(Dashboard)} />
 
         <Route path="/">
-          <Route
-            index
-            element={
-              projectId ? (
-                <Navigate to="/dashboard/home" />
-              ) : (
-                RenderIsAuthComponent(Home)
-              )
-            }
-          />
-          <Route
-            path="create"
-            element={
-              projectId ? (
-                <Navigate to="/dashboard/home" />
-              ) : (
-                RenderIsAuthComponent(Create)
-              )
-            }
-          />
+          <Route index element={RenderIsAuthComponent(Home)} />
+          <Route path="create" element={RenderIsAuthComponent(Create)} />
         </Route>
 
         <Route path="/auth">

@@ -20,7 +20,6 @@ export type GridProps = Children & {
 
 const Grid = (props: GridProps) => {
   const grids = useGrid(props);
-  console.log(grids)
   return (
     <div className={clsx("grid", grids.classGrid, grids.classGap, props.className)}>
       {props.children}

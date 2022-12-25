@@ -9,6 +9,7 @@ import store from "./redux/store";
 import { AuthContextProvider as AuthGuard } from "./contexts/Auth/AuthContext";
 import MasterLayout from "./pages/MasterLayout";
 import LoadingOverlay from "./pages/LoadingOverlay";
+import { FetchProvider } from "./contexts/Fetch/FetchProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,7 +20,9 @@ root.render(
       <AuthGuard>
         <MasterLayout>
           <LoadingOverlay>
-            <App />
+            <FetchProvider>
+              <App />
+            </FetchProvider>
           </LoadingOverlay>
         </MasterLayout>
       </AuthGuard>
