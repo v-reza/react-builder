@@ -5,7 +5,7 @@ export type BoxProps = {
   toolbar?: React.ReactNode;
   children: React.ReactNode;
 };
-const Box = (props: BoxProps) => {
+export const Box = (props: BoxProps) => {
   const { title, subtitle, toolbar } = props;
   return (
     <>

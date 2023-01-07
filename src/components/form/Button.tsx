@@ -33,7 +33,7 @@ export type ButtonProps = PublicButtonProps & {
     | "disabled";
 };
 
-const Button = (props: ButtonProps) => {
+export const Button = (props: ButtonProps) => {
   const {
     type,
     icon,

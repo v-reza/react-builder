@@ -6,7 +6,7 @@ type Props = {
   source: string;
 } & PasswordInputProps;
 
-const PasswordFormik = (props: Props) => {
+export const PasswordFormik = (props: Props) => {
   const { value, onChange, label, error } = useField(props);
   return (
     <Base

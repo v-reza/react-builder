@@ -7,7 +7,7 @@ export type SpacerProps = Children & {
   className?: string;
 };
 
-const Spacer = (props: SpacerProps) => {
+export const Spacer = (props: SpacerProps) => {
   const { children, spaceY, spaceX } = props;
 
   return (

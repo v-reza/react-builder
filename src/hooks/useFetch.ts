@@ -35,7 +35,7 @@ const useFetch = (props: useFetchProps) => {
     },
   });
 
-  const { fetchOnWindowFocus = false } = props
+  const { fetchOnWindowFocus = false } = props;
 
   const onSuccess = useCallback(
     (data: any) => {
@@ -51,16 +51,16 @@ const useFetch = (props: useFetchProps) => {
     [props]
   );
 
-  const refetchProvider = async () => {
+  const refetchProvider = async (resource: string) => {
     if (props.method === "REFETCH") {
       setLoading(true);
       await axiosInstance
-        .get(`${props.resource}`)
+        .get(`${resource}`)
         .then((res: any) => {
           fetchProvider.dispatch({
             type: "UPDATE",
             payload: {
-              resource: props.resource,
+              resource: resource,
               data: res.data,
             },
           });
@@ -117,7 +117,7 @@ const useFetch = (props: useFetchProps) => {
     const exists = _.find(fetchProvider.state, { resource: props.resource });
     if (fetchOnWindowFocus) {
       fetch({});
-      console.log("fetch window focus")
+      console.log("fetch window focus");
     } else {
       if (exists) {
         setData(exists?.data);
@@ -135,19 +135,14 @@ const useFetch = (props: useFetchProps) => {
       props.method !== "DELETE" &&
       props.method !== "REFETCH"
     ) {
-      window.addEventListener("focus", onWindowFocus);
-      onWindowFocus();
+      if (props.fetchOnWindowFocus) {
+        window.addEventListener("focus", onWindowFocus);
+      } else {
+        onWindowFocus();
+      }
       return () => {
         window.removeEventListener("focus", onWindowFocus);
       };
-      // const exists = _.find(fetchProvider.state, { resource: props.resource });
-      // if (exists) {
-      //   setData(exists?.data);
-      //   setLoading(false);
-      //   return
-      // } else {
-      //   fetch({})
-      // }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

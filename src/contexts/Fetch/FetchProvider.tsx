@@ -1,12 +1,12 @@
-import React, { useReducer, useState } from "react";
+import React, { useCallback, useReducer, useState } from "react";
 import { Children } from "../../utils/type";
 import { FetchReducer } from "./FetchReducer";
-import _ from "lodash"
-import useFetch from "../../hooks/useFetch";
-import useFetchProvider from "../../hooks/useFetchProvider";
+import useAuth from "../../hooks/useAuth";
+import axios from "axios";
+import { baseUrl } from "../../utils/axiosInstance";
 export type FetchKey = {
   resource: string;
-  data: any
+  data: any;
 };
 export type FetchProviderType = {
   key: FetchKey[];
@@ -14,7 +14,7 @@ export type FetchProviderType = {
 const initialState = [
   {
     resource: "",
-    data: {}
+    data: {},
   },
 ];
 
@@ -26,22 +26,44 @@ export type FetchAction = {
 export type FetchProviderValue = {
   state: FetchKey[];
   dispatch: React.Dispatch<any>;
-  invalidateFetch: (source: string) => void;
+
+  /**
+   * function untuk refetch ulang sesuai resource
+   * @param resource url api yang akan di fetch ulang, pastikan sebelumnya sudah pernah mekakai resource tersebut
+   * @returns void
+   */
+  invalidateFetch: (resource: string) => void;
 };
 
 export const FetchContext = React.createContext<FetchProviderValue>({
   state: initialState,
   dispatch: (action) => action,
-  invalidateFetch: (source) => {},
+  invalidateFetch: (resource) => {},
 });
 
 export const FetchProvider = (props: Children) => {
   const [state, dispatch] = useReducer(FetchReducer, initialState);
+  const { accessToken } = useAuth();
+  const axiosInstance: any = axios.create({
+    baseURL: baseUrl.development,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 
+  const invalidateFetch = async (resource: string) => {
+    await axiosInstance.get(`${resource}`).then((res: any) => {
+      dispatch({
+        type: "UPDATE",
+        payload: {
+          resource,
+          data: res.data,
+        }
+      })
+    })
+  }
 
-  const invalidateFetch = (source: string) => {
-    
-  };
+  console.log("provider state", state);
 
   const value = {
     state,

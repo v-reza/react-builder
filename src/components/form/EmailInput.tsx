@@ -7,7 +7,7 @@ export type EmailInputProps = PublicInputProps & {
   withIcon?: boolean;
 };
 
-function EmailInput(props: EmailInputProps) {
+export function EmailInput(props: EmailInputProps) {
   const { label, value, readOnly, placeholder, error, withIcon = false } = props;
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

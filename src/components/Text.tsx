@@ -6,7 +6,7 @@ export type TextProps = {
   onClick?: () => void;
 };
 
-const Text = (props: TextProps) => {
+export const Text = (props: TextProps) => {
   const { className, label } = props;
   const onClickText = () => {
     props.onClick && props.onClick();

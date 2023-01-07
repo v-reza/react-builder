@@ -7,7 +7,7 @@ export type TextInputProps = PublicInputProps & {
   withIcon?: boolean;
 };
 
-function TextInput(props: TextInputProps) {
+export function TextInput(props: TextInputProps) {
   const {
     label,
     value,

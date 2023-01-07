@@ -4,7 +4,7 @@ import Base, { EmailInputProps } from "../form/EmailInput"
 type Props = {
   source: string;
 } & EmailInputProps;
-const EmailFormik = (props: Props) => {
+export const EmailFormik = (props: Props) => {
   const { value, onChange, label, error } = useField(props);
   return (
     <Base

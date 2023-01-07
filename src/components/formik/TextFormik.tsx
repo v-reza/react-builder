@@ -5,7 +5,7 @@ import useField from "../../hooks/useField";
 type Props = {
   source: string;
 } & TextInputProps;
-const TextFormik = (props: Props) => {
+export const TextFormik = (props: Props) => {
   const { value, onChange, label, error } = useField(props);
   return (
     <Base

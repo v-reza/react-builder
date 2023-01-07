@@ -18,10 +18,10 @@ export type GridProps = Children & {
   className?: string;
 } & GridType;
 
-const Grid = (props: GridProps) => {
-  const grids = useGrid(props);
+export const Grid = (props: GridProps) => {
+  const grids = useGrid(props); 
   return (
-    <div className={clsx("grid", grids.classGrid, grids.classGap, props.className)}>
+    <div className={grids.classes} style={props.style}>
       {props.children}
     </div>
   );

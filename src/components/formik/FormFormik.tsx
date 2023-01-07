@@ -15,16 +15,18 @@ export type FormFormikProps = {
 export type FormFormikContext = {
   formik: any;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  onSubmit: (values: any, { resetForm }: ResetForm) => void;
 };
 
 export const FormFormikCtx = React.createContext<FormFormikContext>({
   formik: {},
   setFieldValue: () => {},
+  onSubmit: () => {},
 });
 
 export const useFormikContext = () => React.useContext(FormFormikCtx);
 
-const FormFormik = (props: FormFormikProps) => {
+export const FormFormik = (props: FormFormikProps) => {
   const { initialValues, validationSchema } = props;
 
   const formik = useFormik({
@@ -38,6 +40,7 @@ const FormFormik = (props: FormFormikProps) => {
       value={{
         formik,
         setFieldValue: formik.setFieldValue,
+        onSubmit: formik.handleSubmit,
       }}
     >
       <form onSubmit={formik.handleSubmit} className={props.className}>

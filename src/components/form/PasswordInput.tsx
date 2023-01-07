@@ -7,7 +7,7 @@ export type PasswordInputProps = PublicInputProps & {
   withIcon?: boolean;
 };
 
-const PasswordInput = (props: PasswordInputProps) => {
+export const PasswordInput = (props: PasswordInputProps) => {
   const { label, value, readOnly, placeholder, error, withIcon = false } = props;
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {

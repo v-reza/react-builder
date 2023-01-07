@@ -79,7 +79,6 @@ function App() {
   return (
     <HashRouter>
       <ToastContainer />
-      {isAuthenticated && <Navbar />}
       <Routes>
         <Route path="/dashboard/*" element={RenderIsAuthComponent(Dashboard)} />
 
