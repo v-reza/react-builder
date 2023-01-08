@@ -34,10 +34,12 @@ export default function Form(props: FormLoginProps) {
       />
       <Button
         type="submit"
-        icon={
-          <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" />
-        }
-        positionIcon="left"
+        icon={{
+          position: "left",
+          element: (
+            <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" />
+          ),
+        }}
         label={props.loading ? <Spinner color="gray" /> : "Login"}
       />
     </>

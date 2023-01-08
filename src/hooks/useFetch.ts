@@ -17,6 +17,7 @@ export type useFetchProps = {
 
 export type fetchData = {
   data?: any;
+  overlayFetch?: boolean;
 };
 
 const useFetch = (props: useFetchProps) => {
@@ -82,8 +83,9 @@ const useFetch = (props: useFetchProps) => {
 
   const fetch = useCallback(
     async (fetch: fetchData) => {
+      let datas: any = null;
       setLoading(true);
-      props.overlay && show();
+      props.overlay || (fetch.overlayFetch && show());
       await axiosInstance[props.method.toLowerCase()](
         `${props.resource}`,
         !readOnly ? fetch.data : null
@@ -99,15 +101,17 @@ const useFetch = (props: useFetchProps) => {
           setLoading(false);
           setIsSuccess(true);
           onSuccess(res.data);
-          props.overlay && hide();
+          props.overlay || (fetch.overlayFetch && hide());
+          return (datas = res.data);
         })
         .catch((err: any) => {
           setError(err);
           setIsSuccess(false);
           setLoading(false);
           onError(err);
-          props.overlay && hide();
+          props.overlay || (fetch.overlayFetch && hide());
         });
+      return datas;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [props.resource]

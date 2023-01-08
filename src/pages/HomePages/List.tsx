@@ -69,8 +69,7 @@ export const ListProject = (props: ListProjectProps) => {
               btn="outline-primary"
               width="max"
               onClick={() => {
-                localStorage.setItem("projectId", props.id);
-                nav("/dashboard/home");
+                nav("/dashboard/" + props.id);
               }}
             />
             <Button

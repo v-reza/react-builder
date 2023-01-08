@@ -10,12 +10,14 @@ export type PositionDropdownList = {
 };
 
 type LayoutDropdown = PositionDropdownList & {
-  children: React.ReactNode;
-  label: string;
+  children?: React.ReactNode;
+  bottomContent?: any;
+  label?: string;
   className?: string;
+  onClick?: any;
 };
 
-export type DropdownList = LayoutDropdown;
+export type DropdownListProps = LayoutDropdown;
 
 const usePositionDropdownList = (props: PositionDropdownList) => {
   const classes = useMemo(() => {
@@ -51,7 +53,7 @@ const LayoutDropdown = (props: LayoutDropdown) => {
                     <div>
                       <Menu.Button className="rounded-full flex text-sm focus:outline-none">
                         <span className="sr-only">Open user menu</span>
-                        <Text label={props.label} />
+                        <Text label={props.label ?? ""} />
                         <ChevronDownIcon className="h-5 w-5 ml-5" />
                       </Menu.Button>
                     </div>
@@ -67,25 +69,54 @@ const LayoutDropdown = (props: LayoutDropdown) => {
                       <Menu.Items
                         className={clsx(
                           position,
-                          "w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                          "w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none divide-y divide-gray-100 z-20"
                         )}
                       >
-                        {React.Children.map(props.children, (child: any) => {
-                          return (
-                            <Menu.Item>
-                              {({ active }) => (
-                                <div>
-                                  {React.cloneElement(child, {
-                                    className: classNames(
-                                      active ? "bg-gray-100" : "",
+                        <div className="py-1">
+                          {React.Children.map(props.children, (child: any) => {
+                            const item = child.props;
+                            return (
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <div
+                                    className={clsx(
+                                      { "bg-gray-100": active },
                                       "block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-200"
-                                    ),
-                                  })}
-                                </div>
-                              )}
-                            </Menu.Item>
-                          );
-                        })}
+                                    )}
+                                    onClick={item.onClick}
+                                  >
+                                    <Text {...item} />
+                                  </div>
+                                )}
+                              </Menu.Item>
+                            );
+                          })}
+                        </div>
+                        {props.bottomContent && (
+                          <div className="py-1">
+                            {React.Children.map(
+                              props.bottomContent,
+                              (child: any) => {
+                                const item = child.props;
+                                return (
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <div
+                                        className={clsx(
+                                          { "bg-gray-100": active },
+                                          "block px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-200"
+                                        )}
+                                        onClick={item.onClick}
+                                      >
+                                        <Text {...item} />
+                                      </div>
+                                    )}
+                                  </Menu.Item>
+                                );
+                              }
+                            )}
+                          </div>
+                        )}
                       </Menu.Items>
                     </Transition>
                   </Menu>
@@ -99,10 +130,10 @@ const LayoutDropdown = (props: LayoutDropdown) => {
   );
 };
 
-export const DropdownList = (props: DropdownList) => {
+export const DropdownList = (props: DropdownListProps) => {
   const { position = "bottom-right" } = props;
   return (
-    <LayoutDropdown label={props.label} position={position}>
+    <LayoutDropdown label={props.label} position={position} {...props}>
       {props.children}
     </LayoutDropdown>
   );

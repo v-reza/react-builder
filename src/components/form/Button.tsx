@@ -3,7 +3,10 @@ import { PublicButtonProps } from "./typeButton";
 import clsx from "clsx";
 
 export type ButtonProps = PublicButtonProps & {
-  icon?: any;
+  icon?: {
+    position: "left" | "right";
+    element: React.ReactNode;
+  };
   positionIcon?: "left" | "right";
   className?: string;
   classIcon?: string;
@@ -50,24 +53,24 @@ export const Button = (props: ButtonProps) => {
 
   const widthClass = width === "full" ? "w-full" : "w-max";
   const buttonClass = {
-    primary: `${widthClass} border-transparent bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
-    secondary: `${widthClass} border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
-    danger: `${widthClass} border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2`,
-    warning: `${widthClass} border-transparent bg-yellow-300 text-white hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:ring-offset-2`,
-    success: `${widthClass} border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2`,
-    info: `${widthClass} border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`,
-    light: `${widthClass} border-transparent bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-50 focus:ring-offset-2`,
-    dark: `${widthClass} border-transparent bg-gray-800 text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2`,
-    link: `${widthClass} border-transparent bg-transparent text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
-    "outline-primary": `${widthClass} border-indigo-600 text-indigo-600 bg-transparent hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
-    "outline-secondary": `${widthClass} border-gray-300 text-gray-700 bg-transparent hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
-    "outline-danger": `${widthClass} border-red-600 text-red-600 bg-transparent hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2`,
-    "outline-warning": `${widthClass} border-yellow-300 text-yellow-300 bg-transparent hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:ring-offset-2`,
-    "outline-success": `${widthClass} border-green-600 text-green-600 bg-transparent hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2`,
-    "outline-info": `${widthClass} border-blue-600 text-blue-600 bg-transparent hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`,
-    "outline-light": `${widthClass} border-gray-100 text-gray-900 bg-transparent hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-50 focus:ring-offset-2`,
-    "outline-dark": `${widthClass} border-gray-800 text-gray-800 bg-transparent hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2`,
-    "outline-link": `${widthClass} border-transparent text-indigo-600 bg-transparent hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`,
+    primary: `${widthClass} border-transparent bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none`,
+    secondary: `${widthClass} border-gray-300 bg-gray-300 text-gray-700 hover:bg-gray-400 focus:outline-none`,
+    danger: `${widthClass} border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none`,
+    warning: `${widthClass} border-transparent bg-yellow-300 text-white hover:bg-yellow-400 focus:outline-none`,
+    success: `${widthClass} border-transparent bg-green-600 text-white hover:bg-green-700 focus:outline-none`,
+    info: `${widthClass} border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none`,
+    light: `${widthClass} border-transparent bg-gray-100 text-gray-900 hover:bg-gray-200 focus:outline-none`,
+    dark: `${widthClass} border-transparent bg-gray-800 text-white hover:bg-gray-900 focus:outline-none`,
+    link: `${widthClass} border-transparent bg-transparent text-indigo-600 hover:bg-indigo-50 focus:outline-none`,
+    "outline-primary": `${widthClass} border-indigo-600 text-indigo-600 bg-transparent hover:bg-indigo-50 focus:outline-none`,
+    "outline-secondary": `${widthClass} border-gray-300 text-gray-700 bg-transparent hover:bg-gray-50 focus:outline-none`,
+    "outline-danger": `${widthClass} border-red-600 text-red-600 bg-transparent hover:bg-red-50 focus:outline-none`,
+    "outline-warning": `${widthClass} border-yellow-300 text-yellow-300 bg-transparent hover:bg-yellow-50 focus:outline-none`,
+    "outline-success": `${widthClass} border-green-600 text-green-600 bg-transparent hover:bg-green-50 focus:outline-none`,
+    "outline-info": `${widthClass} border-blue-600 text-blue-600 bg-transparent hover:bg-blue-50 focus:outline-none`,
+    "outline-light": `${widthClass} border-gray-100 text-gray-900 bg-transparent hover:bg-gray-50 focus:outline-none`,
+    "outline-dark": `${widthClass} border-gray-800 text-gray-800 bg-transparent hover:bg-gray-50 focus:outline-none`,
+    "outline-link": `${widthClass} border-transparent text-indigo-600 bg-transparent hover:bg-indigo-50 focus:outline-none`,
     disabled: `${widthClass} border-transparent bg-gray-300 text-gray-400 cursor-not-allowed`,
   };
   return (
@@ -83,15 +86,15 @@ export const Button = (props: ButtonProps) => {
         )}
       >
         {props.children && props.children}
-        {icon && positionIcon === "left" && (
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-            {icon}
+        {icon && icon.position === "left" && (
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 pr-3">
+            {icon.element}
           </span>
         )}
         <span className={clsx(props.labelClassName)}>{label}</span>
-        {icon && positionIcon === "right" && (
+        {icon && icon.position === "right" && (
           <span className="absolute inset-y-0 right-0 flex items-center pr-3">
-            {icon}
+            {icon.element}
           </span>
         )}
       </button>

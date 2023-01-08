@@ -37,6 +37,9 @@ export function TextInput(props: TextInputProps) {
           className="block text-sm font-medium text-gray-700"
         >
           {label}
+          {props.required && (
+            <span className="text-red-500 ml-1">*</span>
+          )}
         </label>
       )}
       <div className="mt-1 relative rounded-md shadow-sm">
@@ -54,11 +57,12 @@ export function TextInput(props: TextInputProps) {
               } appearance-none rounded-md border px-3 py-2 focus:z-10 sm:text-sm`,
             classes
           )}
-          placeholder={placeholder}
+          placeholder={placeholder ?? ""}
           value={value}
           readOnly={readOnly}
           onChange={onChange}
           required={props.required}
+          defaultValue={props.defaultValue}
         />
         {error && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -81,7 +85,6 @@ export function TextInput(props: TextInputProps) {
 TextInput.defaultProps = {
   label: "Username",
   readOnly: false,
-  placeholder: "Enter your username",
   error: false,
   withIcon: false,
 };

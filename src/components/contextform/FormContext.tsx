@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import useFetchProvider from "../../hooks/useFetchProvider";
 import useFetch from "../../hooks/useFetch";
 import { ResetForm } from "../formik";
+import useAuth from "../../hooks/useAuth";
 
 type Props = {
   children: React.ReactNode;
@@ -12,20 +13,27 @@ type Props = {
   ids?: string;
 };
 
+type Saving = {
+  data: any;
+  overlay: boolean;
+};
+
 export type FormContextProps = {
   form: any;
   setForm: any;
   clearForm: any;
-  onSave: any;
+  onSave: ({ data, overlay }: Saving) => Promise<any>;
   refetch: () => void;
+  resource: string;
 };
 
 export const FormCtx = React.createContext<FormContextProps>({
   form: {},
   setForm: () => {},
   clearForm: () => {},
-  onSave: () => {},
+  onSave: () => Promise.resolve({ msg: "" }),
   refetch: () => {},
+  resource: "",
 });
 
 export const useFormContext = () => {
@@ -38,7 +46,6 @@ export const useFormContext = () => {
 export const FormContext = (props: Props) => {
   const [form, setForm] = React.useState<any>(props.defaultValues ?? {});
   const fetchProvider = useFetchProvider();
-
   const resourceForm = React.useMemo(() => {
     const resource = props.ids
       ? `${props.resource}/${
@@ -52,15 +59,20 @@ export const FormContext = (props: Props) => {
     setForm(props.defaultValues);
   }, [props.defaultValues]);
 
+  const { updateToken } = useAuth();
   const { fetch } = useFetch({
     method: props.ids ? "PUT" : "POST",
     resource: resourceForm,
+    onSuccess: (data) => {
+      const { accessToken } = data;
+      if (accessToken) {
+        updateToken(accessToken);
+      }
+    },
   });
-
-  const save = useCallback(async () => {
-    await fetch({
-      data: form,
-    });
+  const save = useCallback(async ({ data, overlay = false }: Saving) => {
+    return await fetch({ data, overlayFetch: overlay });
+  
   }, []);
 
   const refetch = useCallback(() => {
@@ -73,6 +85,7 @@ export const FormContext = (props: Props) => {
     clearForm: clear,
     onSave: save,
     refetch,
+    resource: props.resource,
   };
 
   return <FormCtx.Provider value={value}>{props.children}</FormCtx.Provider>;

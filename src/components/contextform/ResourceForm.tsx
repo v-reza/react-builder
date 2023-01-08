@@ -13,6 +13,7 @@ export type ResourceForm = {
 
 type Props = ResourceForm & {
   defaultFormValues?: any;
+  activeSource?: any;
   children: React.ReactNode;
 };
 
@@ -22,18 +23,37 @@ export const ResourceFormContext = React.createContext<ResourceForm>({
 });
 
 const Form = (props: Props) => {
-  const { setForm, onSave } = useFormContext();
-  const { data } = useFetch({
+  const { setForm, onSave, refetch } = useFormContext();
+  const { data, fetch } = useFetch({
     method: "GET",
     resource: props.resource,
   });
 
   useEffect(() => {
     data &&
-      setForm({
-        ...data,
+      setForm((oldForm: any) => {
+        if (props.activeSource) {
+          return {
+            ...oldForm,
+            ...data,
+            ...data[props.activeSource]?.active,
+          };
+        } else {
+          return {
+            ...oldForm,
+            ...data,
+          };
+        }
       });
-  }, [data]);
+  }, [data, props.activeSource]);
+
+  const memoizedResource = React.useMemo(() => {
+    return props.resource;
+  }, [props.resource]);
+
+  useEffect(() => {
+    fetch({});
+  }, [memoizedResource]);
 
   const value: ResourceForm = {
     resource: props.resource,
@@ -63,7 +83,6 @@ export const ResourceForm = (props: Props) => {
       : `${props.resource}/${props.source}`;
     return resource;
   }, [props.ids]);
-
   return (
     <FormContext
       defaultValues={props.defaultFormValues}
@@ -71,7 +90,7 @@ export const ResourceForm = (props: Props) => {
       source={props.source ?? ""}
       ids={props.ids}
     >
-      <Form {...props} resource={resourceForm} />
+      <Form {...props} resource={resourceForm} activeSource={props.resource} />
     </FormContext>
   );
 };

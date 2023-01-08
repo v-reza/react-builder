@@ -16,7 +16,7 @@ import useUser from "../hooks/useUser";
 import Text from "../components/Text";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import useAuth from "../hooks/useAuth";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import useSidebar from "../hooks/useSidebar";
 
 const navigation = [
@@ -32,8 +32,8 @@ export default function Navbar() {
   const { currentUser } = useUser();
   const { dispatch } = useAuth();
   const location = useLocation();
-  const locationDashboard = ["/dashboard/home"];
-  const navDashboard = locationDashboard.includes(location.pathname);
+  const { projectId } = useParams()
+  const navDashboard = projectId ? true : false;
   const { open, show, hide } = useSidebar();
 
   return (

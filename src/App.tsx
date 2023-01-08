@@ -80,7 +80,7 @@ function App() {
     <HashRouter>
       <ToastContainer />
       <Routes>
-        <Route path="/dashboard/*" element={RenderIsAuthComponent(Dashboard)} />
+        <Route path="/dashboard/:projectId" element={RenderIsAuthComponent(Dashboard)} />
 
         <Route path="/">
           <Route index element={RenderIsAuthComponent(Home)} />

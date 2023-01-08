@@ -115,7 +115,7 @@ const useGrid = (props: GridProps) => {
       },
       props.className
     );
-  }, []);
+  }, [props.gap]);
 
   return {
     classes,
