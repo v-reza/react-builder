@@ -1,20 +1,8 @@
 import { useSelector } from "react-redux";
+import { ModelUser } from "../utils/model";
 
-export type ProjectInterface = {
-  id: string;
-  increment_id: number;
-  name: string;
-  description: string;
-}
-
-export type CurrentUserInterface = {
-  userId: string;
-  username: string;
-  email: string;
-  project: [ProjectInterface]
-}
-const useUser = () => {
-  const { currentUser }: { currentUser: CurrentUserInterface } = useSelector(
+export const useUser = () => {
+  const { currentUser }: { currentUser: ModelUser } = useSelector(
     (state: any) => state.user
   );
   return { currentUser };

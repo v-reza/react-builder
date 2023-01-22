@@ -5,11 +5,11 @@ import * as Yup from "yup";
 import FormFormik, { ResetForm } from "../../components/formik/FormFormik";
 import TextFormik from "../../components/formik/TextFormik";
 import Button from "../../components/form/Button";
-import useFetch from "../../hooks/useFetch";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useOverlay from "../../hooks/useOverlay";
+import { useMutation } from "../../hooks";
 
 const Form = () => {
   return (
@@ -47,14 +47,13 @@ const Create = () => {
   };
 
   const nav = useNavigate();
-  const { updateToken } = useAuth()
-  const { fetch } = useFetch({
-    method: "POST",
+  const { updateToken } = useAuth();
+  const { mutation } = useMutation({
     resource: "project/create",
     overlay: true,
     onSuccess: (data) => {
       const { msg, accessToken } = data;
-      updateToken(accessToken)
+      updateToken(accessToken);
       toast.success(msg, {
         autoClose: 2000,
         hideProgressBar: true,
@@ -67,13 +66,13 @@ const Create = () => {
       name: values.name,
       description: values.description,
     };
-    await fetch({ data });
+    await mutation(data);
     resetForm({
       values: {
         name: "",
         description: "",
-      }
-    })
+      },
+    });
     nav("/");
   };
 

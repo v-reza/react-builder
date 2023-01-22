@@ -10,7 +10,7 @@ export type TextInputProps = PublicInputProps & {
 export function TextInput(props: TextInputProps) {
   const {
     label,
-    value,
+    value = "",
     readOnly,
     placeholder,
     error,

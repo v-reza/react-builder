@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useFormikContext } from "../components/formik/FormFormik";
 
-const useField = (props: any) => {
+export const useField = (props: any) => {
   const { formik, setFieldValue } = useFormikContext();
   const { source } = props;
   const onChange = useCallback(

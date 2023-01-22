@@ -4,7 +4,7 @@ import { setSidebar } from "../redux/reducer/sidebarReducer";
 export type SidebarType = {
   open?: boolean;
 };
-const useSidebar = () => {
+export const useSidebar = () => {
   const { open }: SidebarType = useSelector((state: any) => state.sidebar);
   const dispatch = useDispatch()
   const show = () => {

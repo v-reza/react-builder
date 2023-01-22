@@ -6,9 +6,9 @@ import useUser from "../../hooks/useUser";
 import Text from "../../components/Text";
 import Spacer from "../../components/Spacer";
 import { ViewListIcon } from "@heroicons/react/outline";
-import useFetch from "../../hooks/useFetch";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
+import { useMutation } from "../../hooks";
 
 export type ListProjectProps = {
   id: string;
@@ -18,9 +18,10 @@ export type ListProjectProps = {
 export const ListProject = (props: ListProjectProps) => {
   const nav = useNavigate();
   const { updateToken } = useAuth();
-  const { fetch } = useFetch({
-    method: "DELETE",
-    resource: `project/delete/${props.id}`,
+  const { mutation } = useMutation({
+    delete: true,
+    ids: props.id,
+    resource: "project/delete",
     overlay: true,
     onSuccess: (data) => {
       const { msg, accessToken } = data;
@@ -77,7 +78,7 @@ export const ListProject = (props: ListProjectProps) => {
               type="button"
               btn="outline-danger"
               width="max"
-              onClick={() => fetch({})}
+              onClick={() => mutation()}
             />
           </div>
         </div>

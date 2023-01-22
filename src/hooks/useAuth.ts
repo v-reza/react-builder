@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/Auth/AuthContext";
 
-const useAuth = () => {
+export const useAuth = () => {
   const { state, dispatch } = useContext(AuthContext);
   const { accessToken, isAuthenticated } = state;
 

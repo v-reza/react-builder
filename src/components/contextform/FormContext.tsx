@@ -1,9 +1,7 @@
 import React, { useCallback } from "react";
 import * as Yup from "yup";
-import useFetchProvider from "../../hooks/useFetchProvider";
-import useFetch from "../../hooks/useFetch";
-import { ResetForm } from "../formik";
 import useAuth from "../../hooks/useAuth";
+import { useMutation } from "../../hooks";
 
 type Props = {
   children: React.ReactNode;
@@ -23,7 +21,6 @@ export type FormContextProps = {
   setForm: any;
   clearForm: any;
   onSave: ({ data, overlay }: Saving) => Promise<any>;
-  refetch: () => void;
   resource: string;
 };
 
@@ -32,7 +29,6 @@ export const FormCtx = React.createContext<FormContextProps>({
   setForm: () => {},
   clearForm: () => {},
   onSave: () => Promise.resolve({ msg: "" }),
-  refetch: () => {},
   resource: "",
 });
 
@@ -45,13 +41,8 @@ export const useFormContext = () => {
 
 export const FormContext = (props: Props) => {
   const [form, setForm] = React.useState<any>(props.defaultValues ?? {});
-  const fetchProvider = useFetchProvider();
   const resourceForm = React.useMemo(() => {
-    const resource = props.ids
-      ? `${props.resource}/${
-          props.source ? `${props.source}/${props.ids}` : `${props.ids}`
-        }`
-      : `${props.resource}/${props.source}`;
+    const resource = `${props.resource}/${props.source}`;
     return resource;
   }, [props.ids]);
 
@@ -60,31 +51,27 @@ export const FormContext = (props: Props) => {
   }, [props.defaultValues]);
 
   const { updateToken } = useAuth();
-  const { fetch } = useFetch({
-    method: props.ids ? "PUT" : "POST",
+  const { mutation } = useMutation({
+    ids: props.ids,
     resource: resourceForm,
     onSuccess: (data) => {
       const { accessToken } = data;
       if (accessToken) {
         updateToken(accessToken);
       }
-    },
-  });
-  const save = useCallback(async ({ data, overlay = false }: Saving) => {
-    return await fetch({ data, overlayFetch: overlay });
+    }
+  })
   
-  }, []);
-
-  const refetch = useCallback(() => {
-    fetchProvider.invalidateFetch(resourceForm);
-  }, []);
+  const save = useCallback(async ({ data, overlay = false }: Saving) => {
+    // return await fetch({ data, overlayFetch: overlay });
+    return await mutation(data, overlay)
+  }, [props.ids, resourceForm]);
 
   const value: FormContextProps = {
     form,
     setForm,
     clearForm: clear,
     onSave: save,
-    refetch,
     resource: props.resource,
   };
 

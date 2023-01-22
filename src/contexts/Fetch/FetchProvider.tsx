@@ -4,7 +4,9 @@ import { FetchReducer } from "./FetchReducer";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import { baseUrl } from "../../utils/axiosInstance";
+import _ from "lodash"
 export type FetchKey = {
+  queryKey: string;
   resource: string;
   data: any;
 };
@@ -13,6 +15,7 @@ export type FetchProviderType = {
 };
 const initialState = [
   {
+    queryKey: "",
     resource: "",
     data: {},
   },
@@ -28,17 +31,17 @@ export type FetchProviderValue = {
   dispatch: React.Dispatch<any>;
 
   /**
-   * function untuk refetch ulang sesuai resource
-   * @param resource url api yang akan di fetch ulang, pastikan sebelumnya sudah pernah mekakai resource tersebut
+   * function untuk refetch ulang sesuai querkey
+   * @param querykey provider key yang sudah terdaftar, pastikan sebelumnya sudah pernah mekakai querykey tersebut
    * @returns void
    */
-  invalidateFetch: (resource: string) => void;
+  invalidateQuery: (queryKey: string) => void;
 };
 
 export const FetchContext = React.createContext<FetchProviderValue>({
   state: initialState,
   dispatch: (action) => action,
-  invalidateFetch: (resource) => {},
+  invalidateQuery: (queryKey) => {},
 });
 
 export const FetchProvider = (props: Children) => {
@@ -51,11 +54,15 @@ export const FetchProvider = (props: Children) => {
     },
   });
 
-  const invalidateFetch = async (resource: string) => {
-    await axiosInstance.get(`${resource}`).then((res: any) => {
+  const invalidateQuery = async (queryKey: string) => {
+    const findQueryKey : FetchKey = _.find(state, (o) => o.queryKey === queryKey);
+    if (!findQueryKey) throw new Error("Query Key not found, failed invalidate query");
+    const { resource } = findQueryKey
+    await axiosInstance.get(`${resource.split(".").join("/")}`).then((res: any) => {
       dispatch({
         type: "UPDATE",
         payload: {
+          queryKey,
           resource,
           data: res.data,
         }
@@ -68,7 +75,7 @@ export const FetchProvider = (props: Children) => {
   const value = {
     state,
     dispatch,
-    invalidateFetch,
+    invalidateQuery,
   };
   return (
     <FetchContext.Provider value={value}>

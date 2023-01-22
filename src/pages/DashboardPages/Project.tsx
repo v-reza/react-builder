@@ -4,6 +4,10 @@ import { Button } from "../../components/form";
 import { SaveIcon } from "@heroicons/react/outline";
 import { TextInput, useFormContext } from "../../components/contextform";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { saveAs } from "file-saver";
+import fs from "fs";
+import { useFetchProvider } from "../../hooks";
 
 const Configuration = () => {
   return <div>Configuration</div>;
@@ -26,7 +30,7 @@ type ProjectProps = {
 
 const Project = (props: ProjectProps) => {
   const { form, onSave } = useFormContext();
-
+  const fetchProvider = useFetchProvider()
   const save = async () => {
     const data = await onSave({
       data: form,
@@ -37,6 +41,8 @@ const Project = (props: ProjectProps) => {
         autoClose: 2000,
         hideProgressBar: true,
       });
+      fetchProvider.invalidateQuery("project")
+      fetchProvider.invalidateQuery("list_project")
     }
   }
 

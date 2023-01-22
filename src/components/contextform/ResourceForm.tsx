@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
-import useFetch from "../../hooks/useFetch";
 import FormContext, { useFormContext } from "./FormContext";
-import useFetchProvider from "../../hooks/useFetchProvider";
 import { FormFormik } from "../formik";
+import { useQuery } from "../../hooks";
 
 export type ResourceForm = {
   resource: string;
   source?: string | null;
   validationForm?: any;
   ids?: string;
+  queryKey: string
 };
 
 type Props = ResourceForm & {
@@ -20,45 +20,46 @@ type Props = ResourceForm & {
 export const ResourceFormContext = React.createContext<ResourceForm>({
   resource: "",
   validationForm: {},
+  queryKey: ""
 });
 
-const Form = (props: Props) => {
-  const { setForm, onSave, refetch } = useFormContext();
-  const { data, fetch } = useFetch({
-    method: "GET",
-    resource: props.resource,
-  });
+export const useResourceFormContext = () => {
+  const context = React.useContext(ResourceFormContext);
+  if (!context) {
+    throw new Error("useResourceFormContext must be used within a ResourceFormContext");
+  }
+  return context
+}
 
+const Form = (props: Props) => {
+  const { setForm, onSave } = useFormContext();
+  const { data, fetch } = useQuery({
+    queryKey: props.queryKey,
+    resource: props.resource
+  })
   useEffect(() => {
     data &&
       setForm((oldForm: any) => {
-        if (props.activeSource) {
-          return {
-            ...oldForm,
-            ...data,
-            ...data[props.activeSource]?.active,
-          };
-        } else {
-          return {
-            ...oldForm,
-            ...data,
-          };
+        return {
+          ...oldForm,
+          ...data.data,
         }
       });
-  }, [data, props.activeSource]);
+  }, [data]);
 
   const memoizedResource = React.useMemo(() => {
     return props.resource;
   }, [props.resource]);
 
   useEffect(() => {
-    fetch({});
+    fetch();
   }, [memoizedResource]);
 
   const value: ResourceForm = {
     resource: props.resource,
     validationForm: props.validationForm,
     source: props.source,
+    queryKey: props.queryKey
   };
 
   return (
@@ -90,7 +91,7 @@ export const ResourceForm = (props: Props) => {
       source={props.source ?? ""}
       ids={props.ids}
     >
-      <Form {...props} resource={resourceForm} activeSource={props.resource} />
+      <Form {...props} resource={resourceForm} />
     </FormContext>
   );
 };

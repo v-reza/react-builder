@@ -6,27 +6,27 @@ import useOverlay from "./useOverlay";
 import { FetchContext } from "../contexts/Fetch/FetchProvider";
 import _ from "lodash";
 
-export type useFetchProps = {
+export type useQueryProps = {
+  queryKey: string;
   resource: string;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "REFETCH";
   onSuccess?: (data: any) => void;
   onError?: (err: any) => void;
   overlay?: boolean;
   fetchOnWindowFocus?: boolean;
+  cacheQuery?: boolean;
+  enabled?: boolean;
 };
 
 export type fetchData = {
-  data?: any;
   overlayFetch?: boolean;
 };
 
-const useFetch = (props: useFetchProps) => {
+export const useQuery = (props: useQueryProps) => {
   const { accessToken } = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const readOnly = props.method === "GET" ? true : false;
   const { show, hide } = useOverlay();
   const fetchProvider = useContext(FetchContext);
   const axiosInstance: any = axios.create({
@@ -36,7 +36,11 @@ const useFetch = (props: useFetchProps) => {
     },
   });
 
-  const { fetchOnWindowFocus = false } = props;
+  const {
+    fetchOnWindowFocus = false,
+    cacheQuery = true,
+    enabled = true,
+  } = props;
 
   const onSuccess = useCallback(
     (data: any) => {
@@ -51,57 +55,30 @@ const useFetch = (props: useFetchProps) => {
     },
     [props]
   );
-
-  const refetchProvider = async (resource: string) => {
-    if (props.method === "REFETCH") {
-      setLoading(true);
-      await axiosInstance
-        .get(`${resource}`)
-        .then((res: any) => {
-          fetchProvider.dispatch({
-            type: "UPDATE",
-            payload: {
-              resource: resource,
-              data: res.data,
-            },
-          });
-          setLoading(false);
-          setIsSuccess(true);
-          onSuccess(res.data);
-          props.overlay && hide();
-          return;
-        })
-        .catch((err: any) => {
-          setError(err);
-          setIsSuccess(false);
-          setLoading(false);
-          onError(err);
-          props.overlay && hide();
-        });
-    }
-  };
+  
 
   const fetch = useCallback(
-    async (fetch: fetchData) => {
+    async () => {
       let datas: any = null;
       setLoading(true);
-      props.overlay || (fetch.overlayFetch && show());
-      await axiosInstance[props.method.toLowerCase()](
-        `${props.resource}`,
-        !readOnly ? fetch.data : null
-      )
+      props.overlay && show();
+      await axiosInstance
+        .get(`${props.resource.split(".").join("/")}`)
         .then((res: any) => {
-          fetchProvider.dispatch({
-            type: "ADD",
-            payload: {
-              resource: props.resource,
-              data: res.data,
-            },
-          });
+          if (cacheQuery) {
+            fetchProvider.dispatch({
+              type: "ADD",
+              payload: {
+                queryKey: props.queryKey,
+                resource: props.resource,
+                data: res.data,
+              },
+            });
+          }
           setLoading(false);
           setIsSuccess(true);
           onSuccess(res.data);
-          props.overlay || (fetch.overlayFetch && hide());
+          props.overlay && hide();
           return (datas = res.data);
         })
         .catch((err: any) => {
@@ -109,7 +86,7 @@ const useFetch = (props: useFetchProps) => {
           setIsSuccess(false);
           setLoading(false);
           onError(err);
-          props.overlay || (fetch.overlayFetch && hide());
+          props.overlay && hide();
         });
       return datas;
     },
@@ -120,25 +97,20 @@ const useFetch = (props: useFetchProps) => {
   const onWindowFocus = () => {
     const exists = _.find(fetchProvider.state, { resource: props.resource });
     if (fetchOnWindowFocus) {
-      fetch({});
+      fetch();
       console.log("fetch window focus");
     } else {
       if (exists) {
         setData(exists?.data);
         setLoading(false);
       } else {
-        fetch({});
+        fetch();
       }
     }
   };
 
   useEffect(() => {
-    if (
-      props.method !== "POST" &&
-      props.method !== "PUT" &&
-      props.method !== "DELETE" &&
-      props.method !== "REFETCH"
-    ) {
+    if (enabled) {
       if (props.fetchOnWindowFocus) {
         window.addEventListener("focus", onWindowFocus);
       } else {
@@ -153,15 +125,15 @@ const useFetch = (props: useFetchProps) => {
 
   useEffect(() => {
     setData(_.find(fetchProvider.state, { resource: props.resource })?.data);
-  }, [loading, fetchProvider.state, props.resource, props.method]);
+  }, [loading, fetchProvider.state, props.resource]);
 
-  return { loading, data, error, isSuccess, fetch, refetchProvider };
+  return { loading, data, error, isSuccess, fetch };
 };
 
-useFetch.defaultProps = {
+useQuery.defaultProps = {
   method: "GET",
   refetchProvider: false,
   fetchOnWindowFocus: false,
 };
 
-export default useFetch;
+export default useQuery;

@@ -4,7 +4,7 @@ import { setOverlay } from "../redux/reducer/overlayReducer";
 export type OverlayType = {
   isActive?: boolean;
 };
-const useOverlay = () => {
+export const useOverlay = () => {
   const { isActive }: OverlayType = useSelector((state: any) => state.overlay);
   const dispatch = useDispatch()
   const show = () => {

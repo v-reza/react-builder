@@ -20,7 +20,8 @@ const Form = () => {
   const { form } = useFormContext();
   const nav = useNavigate();
   const [isConfiguration, setIsConfiguration] = useState(false)
-
+  const { projectId } = useParams();
+  console.log("form ctx", form)
   return (
     <Spacer className="p-10" spaceY={10}>
       <div className="flex items-center justify-between bg-white shadow-lg rounded-md px-4">
@@ -30,9 +31,11 @@ const Form = () => {
           </div>
           <div>
             <DropdownList
-              primaryKey="id"
-              source="project.list_project"
+              source="current_project"
+              resource="project.listproject"
+              queryKey="list_project"
               valueSource="name"
+              ids={projectId ?? ""}
               onClick={(row: any) => {
                 nav(`/dashboard/${row.id}`);
               }}
@@ -87,7 +90,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <ResourceForm resource="project" ids={projectId} source={null}>
+      <ResourceForm resource="project" ids={projectId} queryKey="project">
         {isAuthenticated && <Navbar />}
         <div className="md:pl-64 flex flex-col flex-1">
           <Routes>

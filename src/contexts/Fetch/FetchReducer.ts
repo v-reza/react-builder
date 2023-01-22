@@ -7,6 +7,7 @@ export const FetchReducer = (state: any, action: any) => {
           (item: any) => item.resource !== action.payload.resource
         ),
         {
+          queryKey: action.payload.queryKey,
           resource: action.payload.resource,
           data: action.payload.data,
         },
@@ -17,6 +18,7 @@ export const FetchReducer = (state: any, action: any) => {
           (item: any) => item.resource !== action.payload.resource
         ),
         {
+          queryKey: action.payload.queryKey,
           resource: action.payload.resource,
           data: action.payload.data,
         },
