@@ -8,7 +8,7 @@ export type PasswordInputProps = PublicInputProps & {
 };
 
 export const PasswordInput = (props: PasswordInputProps) => {
-  const { label, value, readOnly, placeholder, error, withIcon = false } = props;
+  const { label, value = "", readOnly, placeholder = "", error, withIcon = false } = props;
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -48,7 +48,7 @@ export const PasswordInput = (props: PasswordInputProps) => {
               } appearance-none rounded-md border px-3 py-2 focus:z-10 sm:text-sm`,
             classes
           )}
-          placeholder={placeholder}
+          placeholder={placeholder ?? ""}
           value={value}
           readOnly={readOnly}
           onChange={onChange}

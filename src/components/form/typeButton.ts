@@ -7,5 +7,4 @@ export type PublicButtonProps = {
   type: "button" | "submit" | "reset";
   required?: boolean;
   disabled?: boolean;
-
 }

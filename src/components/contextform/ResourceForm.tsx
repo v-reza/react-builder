@@ -9,6 +9,7 @@ export type ResourceForm = {
   validationForm?: any;
   ids?: string;
   queryKey: string
+  afterLoad?: (data: any) => any
 };
 
 type Props = ResourceForm & {
@@ -91,7 +92,7 @@ export const ResourceForm = (props: Props) => {
       source={props.source ?? ""}
       ids={props.ids}
     >
-      <Form {...props} resource={resourceForm} />
+      <Form {...props} resource={resourceForm} afterLoad={props.afterLoad}/>
     </FormContext>
   );
 };

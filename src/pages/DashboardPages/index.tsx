@@ -21,7 +21,7 @@ const Form = () => {
   const nav = useNavigate();
   const [isConfiguration, setIsConfiguration] = useState(false)
   const { projectId } = useParams();
-  console.log("form ctx", form)
+  console.log("form", form)
   return (
     <Spacer className="p-10" spaceY={10}>
       <div className="flex items-center justify-between bg-white shadow-lg rounded-md px-4">
@@ -87,7 +87,6 @@ const Form = () => {
 const Dashboard = () => {
   const { isAuthenticated } = useAuth();
   const { projectId } = useParams();
-
   return (
     <>
       <ResourceForm resource="project" ids={projectId} queryKey="project">

@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Grid, Text } from "../../components";
+import { Box, Grid, Spacer, Text } from "../../components";
 import { Button } from "../../components/form";
 import { SaveIcon } from "@heroicons/react/outline";
-import { TextInput, useFormContext } from "../../components/contextform";
+import { LookupInput, TextInput, useFormContext } from "../../components/contextform";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { saveAs } from "file-saver";
@@ -10,7 +10,34 @@ import fs from "fs";
 import { useFetchProvider } from "../../hooks";
 
 const Configuration = () => {
-  return <div>Configuration</div>;
+  return (
+    <Spacer spaceY={6}>
+      <div>
+        <LookupInput pks={["code"]} resource="iframework" source="configuration.framework" valueSource="name" label="Backend Framework" />
+      </div>
+      <div>
+        <LookupInput pks={["code"]} resource="idatabase" source="configuration.database" valueSource="name" label="Database" />
+      </div>
+      <div>
+        <TextInput source="configuration.database_name" label="Database Name"/>
+      </div>
+      <div>
+        <TextInput source="configuration.database_user" label="Database User"/>
+      </div>
+      <div>
+        <TextInput source="configuration.database_password" label="Database Password"/>
+      </div>
+      <div>
+        <TextInput source="configuration.database_host" label="Database Host"/>
+      </div>
+      <div>
+        <TextInput source="configuration.database_port" label="Database Port"/>
+      </div>
+      <div>
+        <TextInput source="configuration.application_name" label="Application Name"/>
+      </div>
+    </Spacer>
+  );
 };
 
 const DetailProject = () => {

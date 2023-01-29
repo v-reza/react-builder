@@ -30,7 +30,7 @@ const useFieldContext = (props: any) => {
   }, []);
 
 
-  const val = _.get(form, source);
+  const val = _.get(form, source) ?? "";
   const active = _.get(form, source.split(".")[0] + ".active") ?? undefined;
 
   return {

@@ -27,11 +27,16 @@ export const DropdownList = (props: DropdownListProps) => {
   const { form, setForm } = useFormContext();
   const [value, setValue] = useState<any>(null);
   const { accessToken } = useAuth();
-  const { data } = useQuery({
+  const { data, fetch } = useQuery({
     queryKey: props.queryKey ?? props.resource,
     resource: props.resource,
     enabled: props.resource !== "token",
+    fetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    fetch()
+  }, [])
 
   const labelValue = _.get(form, `${props.source}.${props.valueSource}`);
 

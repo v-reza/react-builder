@@ -5,4 +5,5 @@ export * from "./useMutation"
 export * from "./useQuery"
 export * from "./useSidebar"
 export * from "./useUser"
+export * from "./useGet"
 
